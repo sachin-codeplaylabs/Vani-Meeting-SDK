@@ -1,0 +1,3 @@
+include ':MeetingLib'
+include ':app'
+rootProject.name = "VaniMeetingLib"
