@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.bolo.meetinglib.BuildConfig;
 import com.bolo.meetinglib.MeetingCallBack;
 import com.bolo.meetinglib.constant.Constant;
 import com.bolo.meetinglib.constant.Utility;
@@ -108,7 +109,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
             sTracker = sAnalytics.newTracker("UA-190458994-3");
             sTracker.enableExceptionReporting(true);
             sTracker.enableAutoActivityTracking(true);
-
+            Utility.logEventNew("App", context.getPackageName(),sTracker);
         }
 
         return sTracker;
