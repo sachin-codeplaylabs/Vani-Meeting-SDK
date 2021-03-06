@@ -20,8 +20,8 @@ public class MeetingStartRequest {
     private boolean defaultVideoEnable = true;
     private boolean defaultMicEnable = true;
     private CameraDirection deafultCameraDirection = CameraDirection.CAMERA_DIRECTION_FRONT;
-    private int videoCaptureWidth = 480;
-    private int videoCaptureHeight = 640;
+    private int videoCaptureWidth = 300;
+    private int videoCaptureHeight = 300;
     private boolean localRenderingRequired = true;
 
     public MeetingStartRequest(String userId, String roomId, boolean canSendVideo, boolean canSendAudio) {

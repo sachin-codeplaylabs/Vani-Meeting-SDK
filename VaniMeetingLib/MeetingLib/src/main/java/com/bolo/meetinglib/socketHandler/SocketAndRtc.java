@@ -14,10 +14,13 @@ import androidx.core.content.ContextCompat;
 
 import com.bolo.meetinglib.MeetingCallBack;
 import com.bolo.meetinglib.constant.Constant;
+import com.bolo.meetinglib.constant.Utility;
 import com.bolo.meetinglib.model.MeetingStartRequest;
 import com.bolo.meetinglib.model.MessagePayload;
 import com.bolo.meetinglib.model.OnPeerConnectionResponse;
 import com.bolo.meetinglib.model.Peer;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +57,7 @@ import org.webrtc.VideoTrack;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,6 +69,8 @@ import io.socket.engineio.client.EngineIOException;
 import io.socket.engineio.client.transports.WebSocket;
 
 public class SocketAndRtc implements OnPeerConnectionResponse {
+    private final GoogleAnalytics sAnalytics;
+    private static Tracker sTracker;
     private Socket mSocket;
     private String userId,roomId;
     private MeetingStartRequest meetingStartRequest;
@@ -84,6 +90,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
     private boolean isConnectCalled = false;
     private ProxyVideoSink localVideoSink;
     private SurfaceViewRenderer localSurfaceViewRenderer;
+    private long startTime = 0;
 
     public SocketAndRtc(Context context, MeetingStartRequest meetingStartRequest, MeetingCallBack meetingCallBack) {
         this.userId = meetingStartRequest.getUserId();
@@ -91,8 +98,21 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
         this.meetingCallBack = meetingCallBack;
         this.meetingStartRequest = meetingStartRequest;
         this.context = context;
+        sAnalytics = GoogleAnalytics.getInstance(context);
+
     }
 
+    synchronized public Tracker getDefaultTracker() {
+        // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+        if (sTracker == null) {
+            sTracker = sAnalytics.newTracker("UA-190458994-3");
+            sTracker.enableExceptionReporting(true);
+            sTracker.enableAutoActivityTracking(true);
+
+        }
+
+        return sTracker;
+    }
     public  void  connectSocket(){
         if(initWebRtc(context) == false){
             return;
@@ -113,7 +133,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
             mSocket.on(Socket.EVENT_DISCONNECT,onConnectionDisconnect);
             mSocket.connect();
 
-
+            Utility.logEventNew("Call","Connect",getDefaultTracker());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,6 +148,12 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
             mSocket.close();
             mSocket.disconnect();
             mSocket  = null;
+        }
+
+        if (startTime > 100){
+            long callTimeInMilli = Calendar.getInstance().getTimeInMillis() - startTime;
+            callTimeInMilli = callTimeInMilli / 1000;
+            Utility.logEventNew("Call","Time:" + callTimeInMilli + " Sec", getDefaultTracker());
         }
     }
 
@@ -294,7 +320,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
 
                     }
                 }
-            }, 200);
+            }, 150);
 
         }
         catch (Exception e){
@@ -311,6 +337,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
                 public void run() {
                     isConnectCalled = true;
                     meetingCallBack.onConnected();
+                    startTime = Calendar.getInstance().getTimeInMillis();
                 }
             };
             mainHandler.post(myRunnable);
@@ -752,11 +779,13 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
         public void call(Object... args) {
 
             if (mSocket != null && mSocket.isActive()){
+
                 listnerEvents = new ArrayList<>();
                 Log.e("Socket id",mSocket.id());
 
                 socketSubscribeToTopic();
 
+                Utility.logEventNew("Call","Connect Success",getDefaultTracker());
 
 
             }
@@ -775,6 +804,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
         public void call(Object... args) {
             Log.e("error",args[0].toString());
             try {
+                Utility.logEventNew("Call","Connect Error",getDefaultTracker());
                 EngineIOException engineIOException  = (EngineIOException) args[0];
                 if (meetingCallBack != null && peers.isEmpty() && isConnectCalled == false){
                     Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -819,6 +849,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
             } // This is your code
         };
         mainHandler.post(myRunnable);
+
     }
     @Override
     public void onSuccesfullyCreated(Peer peer, SessionDescription sessionDescription) {
@@ -881,6 +912,7 @@ public class SocketAndRtc implements OnPeerConnectionResponse {
                         meetingCallBack.onNewUserJoined(peer.getId());
 
                     }
+                    Utility.logEventNew("Peer","Count: " + peers.size(), getDefaultTracker());
                 }
             };
             mainHandler.post(myRunnable);
