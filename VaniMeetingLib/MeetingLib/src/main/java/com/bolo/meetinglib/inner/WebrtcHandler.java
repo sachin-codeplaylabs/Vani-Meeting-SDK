@@ -637,7 +637,7 @@ public class WebrtcHandler  extends BaseWebrtcSFU{
 
 
                 }
-                if(iceConnectionState == PeerConnection.IceConnectionState.COMPLETED){
+                if(iceConnectionState == PeerConnection.IceConnectionState.CONNECTED){
                     onPeerConnected(peer);
                     setMaxBitRateForRtpSender(peer);
                 }
