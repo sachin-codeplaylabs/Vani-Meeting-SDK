@@ -3,7 +3,11 @@ package com.bolo.meetinglib.model;
 import android.view.SurfaceView;
 
 
+import org.json.JSONObject;
 import org.webrtc.SurfaceViewRenderer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MeetingStartRequest {
 
@@ -12,106 +16,34 @@ public class MeetingStartRequest {
     public  enum  CameraDirection{
         CAMERA_DIRECTION_FRONT,
         CAMERA_DIRECTION_BACK
-    }
-    private String userId;
-    private String roomId;
-    private boolean canSendVideo;
-    private boolean canSendAudio;
-    private boolean defaultVideoEnable = true;
-    private boolean defaultMicEnable = true;
-    private CameraDirection deafultCameraDirection = CameraDirection.CAMERA_DIRECTION_FRONT;
-    private int videoCaptureWidth = 300;
-    private int videoCaptureHeight = 300;
-    private boolean localRenderingRequired = true;
+    }//Sachin
 
-    public MeetingStartRequest(String userId, String roomId, boolean canSendVideo, boolean canSendAudio) {
+    public int videoCaptureWidth = 300;
+    public int videoCaptureHeight = 300;
+    public String userId;
+    public String roomId;
+    public boolean defaultWhiteboardEditEnable = true;
+    public String cameraDevice; //Sachin
+    public String audioInDevice; //Sachin
+    public int numberOfUsers = 2;
+    public boolean isRecordingRequired = false;
+    public boolean isAdmin = false;
+    public String appId = "";
+    public Map<String,String> userData = new HashMap<String,String>();
+    public JSONObject apiData = new JSONObject();
+    public boolean isMobileApp = true;//Sachin
+    public int screenSharingHeight = 640;
+    public int screenSharingWidth = 320;
+    public CameraDirection defaultCameraDirection = CameraDirection.CAMERA_DIRECTION_FRONT;
+
+    public MeetingStartRequest(String userId, String roomId, String appId) {
         this.userId = userId;
         this.roomId = roomId;
-        this.canSendVideo = canSendVideo;
-        this.canSendAudio = canSendAudio;
+        this.appId = appId;
     }
 
-    public String getUserId() {
-        return userId;
+    public boolean shouldUseSFU(){
+        return  (this.numberOfUsers > 3 );
+
     }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public boolean isCanSendVideo() {
-        return canSendVideo;
-    }
-
-    public void setCanSendVideo(boolean canSendVideo) {
-        this.canSendVideo = canSendVideo;
-    }
-
-    public boolean isCanSendAudio() {
-        return canSendAudio;
-    }
-
-    public void setCanSendAudio(boolean canSendAudio) {
-        this.canSendAudio = canSendAudio;
-    }
-
-    public boolean isDefaultVideoEnable() {
-        return defaultVideoEnable;
-    }
-
-    public void setDefaultVideoEnable(boolean defaultVideoEnable) {
-        this.defaultVideoEnable = defaultVideoEnable;
-    }
-
-    public boolean isDefaultMicEnable() {
-        return defaultMicEnable;
-    }
-
-    public void setDefaultMicEnable(boolean defaultMicEnable) {
-        this.defaultMicEnable = defaultMicEnable;
-    }
-
-    public boolean isLocalRenderingRequired() {
-        return localRenderingRequired;
-    }
-
-    public void setLocalRenderingRequired(boolean localRenderingRequired) {
-        this.localRenderingRequired = localRenderingRequired;
-    }
-
-
-    public CameraDirection getDeafultCameraDirection() {
-        return deafultCameraDirection;
-    }
-
-    public void setDeafultCameraDirection(CameraDirection deafultCameraDirection) {
-        this.deafultCameraDirection = deafultCameraDirection;
-    }
-
-    public int getVideoCaptureWidth() {
-        return videoCaptureWidth;
-    }
-
-    public void setVideoCaptureWidth(int videoCaptureWidth) {
-        this.videoCaptureWidth = videoCaptureWidth;
-    }
-
-    public int getVideoCaptureHeight() {
-        return videoCaptureHeight;
-    }
-
-    public void setVideoCaptureHeight(int videoCaptureHeight) {
-        this.videoCaptureHeight = videoCaptureHeight;
-    }
-
-
-
 }

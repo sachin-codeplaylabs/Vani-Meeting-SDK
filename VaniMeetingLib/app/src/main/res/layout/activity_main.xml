@@ -21,9 +21,19 @@
     android:orientation="horizontal" />
     <LinearLayout
     android:id="@+id/remoteSteamSurfaceView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" />
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:orientation="horizontal" >
+<!--<org.webrtc.SurfaceViewRenderer-->
+<!--    android:id="@+id/localView"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"/>-->
+
+        <com.bolo.meetinglib.VaniMeetingVideoView
+            android:id="@+id/meetingVideoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
     <EditText
         android:textAlignment="center"
         android:id="@+id/roomId"
@@ -94,6 +104,20 @@
     <Button
         android:id="@+id/end"
         android:text="End Call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/mute"
+        android:text="Mute Unmute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/pause"
+        android:text="Pause Resume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"/>
