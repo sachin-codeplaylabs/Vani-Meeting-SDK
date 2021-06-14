@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity  {
         findViewById(R.id.end).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MeetingHandler.getInstance().endAndDestory();
+                MeetingHandler.getInstance().endAndDestory(null);
 //                MeetingHandler.getInstance().destory();
             }
         });

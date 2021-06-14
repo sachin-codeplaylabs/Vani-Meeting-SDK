@@ -2282,7 +2282,7 @@ public class MeetingHandler implements HandlerDelegate {
 
     private void checkIfInternetReachable(int count) {
         if(meetingStartRequest == null){
-            onEndAndDestory();
+            onEndAndDestory(null);
             return;
         }
         if (count == 2) {
@@ -2308,7 +2308,7 @@ public class MeetingHandler implements HandlerDelegate {
                 logEvent(error.getLocalizedMessage(),true);
                 if (countFinal > 35) {
                     infromSourceOnNetworkIssue("reconectionTimeout");
-                    onEndAndDestory();
+                    onEndAndDestory(null);
                     return;
                 }
                 internetReachbilityTimeout = new Timer();
