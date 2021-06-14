@@ -803,8 +803,8 @@ public class MeetingHandler implements HandlerDelegate {
         sendLocalStreamRequest(true);
     }
 
-    public void endAndDestory(){
-        onEndAndDestory();
+    public void endAndDestory(DestoryCallBack destoryCallBack){
+        onEndAndDestory(destoryCallBack);
     }
 
     public Output sendMessage(MessagePayload messagePayload) {
@@ -2350,7 +2350,7 @@ public class MeetingHandler implements HandlerDelegate {
     private void infromSourceOnNetworkIssue(String message) {
         emitMessageToSource(message, new HashMap<>());
     }
-    private void onEndAndDestory() {
+    private void onEndAndDestory(DestoryCallBack destoryCallBack) {
         isEnded = true;
         AsyncTask.execute(new Runnable() {
             @Override
@@ -2453,6 +2453,9 @@ public class MeetingHandler implements HandlerDelegate {
                     isFetchVideoInProgress = false;
                     webrtcSFUHandller = null;
                     instance = null;
+                    if(destoryCallBack != null){
+                        destoryCallBack.onEnded();
+                    }
                 }
             }
         });
@@ -2545,5 +2548,7 @@ public class MeetingHandler implements HandlerDelegate {
   public   interface OutputCallBack{
         void onCompletion(Output output);
     }
-
+    public   interface DestoryCallBack{
+        void onEnded();
+    }
 }
