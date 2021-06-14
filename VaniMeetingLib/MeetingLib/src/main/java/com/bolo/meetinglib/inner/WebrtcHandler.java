@@ -237,6 +237,13 @@ public class WebrtcHandler  extends BaseWebrtcSFU{
         onIceCandidate(data);
 
     }
+    public Peer peerByUserId(String partnerId ){
+        if(peerDatabase.containsKey(partnerId)){
+            Peer peer = peerDatabase.get(partnerId);
+            return peer;
+        }
+        return null;
+    }
     public void disconnectPeer(JSONObject data ){
         try {
             if (data.has("message") && data.getJSONObject("message").has("participant") && data.getJSONObject("message").getJSONObject("participant").has("userId")) {

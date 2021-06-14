@@ -1384,7 +1384,12 @@ public class MeetingHandler implements HandlerDelegate {
                         newJoniees.add(data);
                     }
 
-                } else if (type .equalsIgnoreCase( "userLeft") ){
+                }
+                else if (type .equalsIgnoreCase("rejoined") ){
+                    onRejoined(data);
+
+                }
+                else if (type .equalsIgnoreCase( "userLeft") ){
                     onPartnerLeft(data);
                 } else if (type .equalsIgnoreCase(  "onRouterRtpCapabilities") ){
                     onRouterRtpCapabilities(data);
@@ -1488,6 +1493,40 @@ public class MeetingHandler implements HandlerDelegate {
             allParticipant.add(participant);
         }
         return participant;
+    }
+
+    private void onRejoined(JSONObject data){
+        try {
+            JSONObject newParticipant = data.getJSONObject("message").getJSONObject("participant");
+
+            if (isStartupSetupCalled) {
+                if (Participant.isParticipantPresent(allParticipant, newParticipant.getString("userId")) ==  false) {
+                    onNewPartnerAdded(data, true);
+                } else {
+                    if (meetingStartRequest.shouldUseSFU() ==  false) {
+                        Peer peer = ((WebrtcHandler)getHandler()).peerByUserId(newParticipant.getString("userId"));
+                        if (peer ==  null) {
+                            JSONObject handShake = new JSONObject();
+                            handShake.put("message" , "Welcome");
+                            handShake.put("type" , "handshake");
+                            handShake.put("to" ,newParticipant.getString("userId"));
+                            sendMessage(handShake);
+                        }
+                    }
+                }
+            } else {
+                for (JSONObject newJoniee : newJoniees) {
+                    JSONObject oldJoinee = newJoniee.getJSONObject("message").getJSONObject("participant");
+                    if (oldJoinee.getString("userId").equalsIgnoreCase( newParticipant.getString("userId"))) {
+                        return;
+                    }
+                }
+                newJoniees.add(data);
+            }
+        }
+        catch (Exception e){
+
+        }
     }
 
 
