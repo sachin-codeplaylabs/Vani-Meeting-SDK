@@ -1,7 +1,11 @@
 package com.bolo.meetinglib.inner;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.OrientationEventListener;
@@ -31,6 +35,8 @@ import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
+import static android.content.Intent.ACTION_CONFIGURATION_CHANGED;
+
 public abstract class BaseWebrtcSFU {
 
 
@@ -43,6 +49,7 @@ public abstract class BaseWebrtcSFU {
     private SurfaceTextureHelper surfaceTextureHelper;
     private SurfaceTextureHelper ssSurfaceTextureHelper;
     private OrientationEventListener orientatationListener;
+    private BroadcastReceiver mBroadcastReceiver;
 
     public void setHandlerDelegate(HandlerDelegate handlerDelegate) {
         this.handlerDelegate = handlerDelegate;
@@ -241,6 +248,15 @@ public abstract class BaseWebrtcSFU {
         if(this.orientatationListener != null){
             this.orientatationListener.disable();
         }
+        if(mBroadcastReceiver != null){
+            try{
+                context.unregisterReceiver(mBroadcastReceiver);
+                mBroadcastReceiver = null;
+            }
+            catch (Exception e){
+
+            }
+        }
 
     }
 
@@ -258,19 +274,47 @@ public abstract class BaseWebrtcSFU {
         videoCapturer.initialize(ssSurfaceTextureHelper,context, mVideoSource.getCapturerObserver());
         videoCapturer.startCapture(MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingWidth,MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingHeight,25);
         VideoTrack localVideoTrack = getPeerFactory().createVideoTrack("SSV0", mVideoSource);
-        this.orientatationListener = new OrientationEventListener(context) {
-            @Override
-            public void onOrientationChanged(int orientation) {
-                try {
 
-                    videoCapturer.changeCaptureFormat(MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingHeight,MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingWidth,25);
-                } catch (Exception ex) {
-                    // We ignore exceptions here. The video capturer runs on its own
-                    // thread and we cannot synchronize with it.
+
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent myIntent) {
+
+                if ( myIntent.getAction().equals( ACTION_CONFIGURATION_CHANGED ) ) {
+
+                    if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                        // it's Landscape
+                        Log.d("sachin", "LANDSCAPE");
+                        videoCapturer.changeCaptureFormat(MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingHeight,MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingWidth,25);
+                    }
+                    else {
+                        videoCapturer.changeCaptureFormat(MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingHeight,MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingWidth,25);
+
+//                        videoCapturer.changeCaptureFormat(MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingWidth,MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingHeight,25);
+                        Log.d("sachin", "PORTRAIT");
+
+                    }
                 }
             }
         };
-        this.orientatationListener.enable();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_CONFIGURATION_CHANGED);
+        context.registerReceiver(mBroadcastReceiver, filter);
+
+
+//        this.orientatationListener = new OrientationEventListener(context) {
+//            @Override
+//            public void onOrientationChanged(int orientation) {
+//                try {
+//                    logEvent("onOrientationChanged" ,false);
+//                    videoCapturer.changeCaptureFormat(MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingHeight,MeetingHandler.getInstance().getMeetingStartRequestModel().screenSharingWidth,25);
+//                } catch (Exception ex) {
+//                    // We ignore exceptions here. The video capturer runs on its own
+//                    // thread and we cannot synchronize with it.
+//                }
+//            }
+//        };
+//        this.orientatationListener.enable();
         return localVideoTrack;
 
     }
