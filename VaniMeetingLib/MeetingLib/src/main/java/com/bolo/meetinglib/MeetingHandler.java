@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -2454,7 +2455,17 @@ public class MeetingHandler implements HandlerDelegate {
                     webrtcSFUHandller = null;
                     instance = null;
                     if(destoryCallBack != null){
-                        destoryCallBack.onEnded();
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+                        Runnable myRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                destoryCallBack.onEnded();
+                            }
+
+
+                        };
+                        mainHandler.post(myRunnable);
                     }
                 }
             }
