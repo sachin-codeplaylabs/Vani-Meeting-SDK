@@ -35,28 +35,28 @@ public class Config {
             iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
         else if(appId .equalsIgnoreCase( "ind1")){
-            iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
-            iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("stun:stunin.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turnin.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
         else if(appId .equalsIgnoreCase( "ind2")){
-            iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
-            iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("stun:stunin1.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turnin1.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
         else if(appId .equalsIgnoreCase( "ind3")){
-            iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
-            iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("stun:stunin2.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turnin2.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
         else if(appId .equalsIgnoreCase( "ind4")){
-            iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
-            iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("stun:stun.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turn.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
         else if(appId .equalsIgnoreCase( "fra1")){
-            iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
-            iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("stun:stun2.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turn2.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
         else if(appId .equalsIgnoreCase( "nyc1")){
-            iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
-            iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("stun:stun1.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turn1.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
         else if(appId .equalsIgnoreCase( "trail")){
             iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));

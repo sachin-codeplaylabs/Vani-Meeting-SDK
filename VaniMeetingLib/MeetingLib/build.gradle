@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 11
-        versionName "2.0.7"
+        versionCode 12
+        versionName "2.0.8"
     }
 
     buildTypes {
@@ -27,7 +27,13 @@ android {
 }
 
 dependencies {
-    api 'org.webrtc:google-webrtc:1.0.+'
+//    implementation ('org.mediasoup.droid:mediasoup-client:3.0.8-beta-3'){
+//        exclude group: 'org.webrtc', name:'google-webrtc'
+//    }
+
+
+
+//    api 'org.webrtc:google-webrtc:1.0.+'
     implementation "org.java-websocket:Java-WebSocket:1.5.1"
     implementation 'androidx.core:core:1.3.2'
     implementation 'com.google.android.gms:play-services-analytics:17.0.0'
