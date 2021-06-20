@@ -2406,17 +2406,10 @@ public class MeetingHandler implements HandlerDelegate {
                             }
                         }
                     }
-                    if(localStream != null) {
-                        try {
-                            localStream.dispose();
-                        }
-                        catch (Exception e){
 
-                        }
-                    }
-                    localStream = null;
 
                     if(screenshareStream != null) {
+                        logEvent("screenshareStream",false);
                         try {
                             screenshareStream.dispose();
                         }
@@ -2425,6 +2418,18 @@ public class MeetingHandler implements HandlerDelegate {
                         }
                     }
                     screenshareStream = null;
+
+
+                    if(localStream != null) {
+                        logEvent("localStream",false);
+                        try {
+                            localStream.dispose();
+                        }
+                        catch (Exception e){
+
+                        }
+                    }
+                    localStream = null;
                     mMediaProjectionPermissionResultData = null;
 
 
