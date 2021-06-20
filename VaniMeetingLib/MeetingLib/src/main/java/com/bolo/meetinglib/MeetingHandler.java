@@ -2353,9 +2353,9 @@ public class MeetingHandler implements HandlerDelegate {
     }
     private void onEndAndDestory(DestoryCallBack destoryCallBack) {
         isEnded = true;
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
+
+        new Thread(() -> {
+            {
                 logEvent("onEndAndDestory",false);
 
                 try{
@@ -2469,7 +2469,125 @@ public class MeetingHandler implements HandlerDelegate {
                     }
                 }
             }
-        });
+
+        }).start();
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                logEvent("onEndAndDestory",false);
+//
+//                try{
+//                    emitMessageToSource("onEnded",null);
+//                }
+//                catch (Exception e){
+//
+//                }
+//
+//                events = new HashMap<>();
+//                {
+//
+//                    try {
+//                        if (meetingStartRequest != null) {
+//                            JSONObject data = new JSONObject();
+//                            data.put("userId" , meetingStartRequest.userId);
+//                            sendSocketMessage("selfLeft", data);
+//                        }
+//                    }
+//                    catch (Exception e){
+//                        logEvent(e.toString(),true);
+//
+//                    }
+//
+//
+//                    EglUtils.cleanUp();
+//
+//                    try {
+//                        getHandler().destory();
+//                    }
+//
+//                    catch (Exception e) {
+//                        logEvent(e.toString(),true);
+//
+//                    }
+//                    if (wss != null) {
+//                        wss.close();
+//                        wss = null;
+//                    }
+//
+//                    for(Track track : allTracks){
+//                        if(track.track != null){
+//                            try{
+//                                track.track.dispose();
+//                            }
+//                            catch (Exception e){
+//
+//                            }
+//                        }
+//                    }
+//                    if(localStream != null) {
+//                        try {
+//                            localStream.dispose();
+//                        }
+//                        catch (Exception e){
+//
+//                        }
+//                    }
+//                    localStream = null;
+//
+//                    if(screenshareStream != null) {
+//                        try {
+//                            screenshareStream.dispose();
+//                        }
+//                        catch (Exception e){
+//
+//                        }
+//                    }
+//                    screenshareStream = null;
+//                    mMediaProjectionPermissionResultData = null;
+//
+//
+//                    handShakeDatas = new ArrayList<>();
+//                    peers = new ArrayList<>();
+//                    newJoniees = new ArrayList<>();
+//                    allParticipant = new ArrayList<>();
+//                    allTracks = new ArrayList<>();
+//                    meetingStartRequest = null;
+//                    localStream = null;
+//                    isSetUpDone = false;
+//
+//                    isStartupSetupCalled = false;
+//                    peers = new ArrayList<>();
+//                    isPermissionGiven = false;
+//                    screenshareStream = null;
+//                    currentVideoDeviceId = null;
+//                    currentAudioDeviceId = null;
+//                    setUpTry = 0;
+//                    isStartAndSetupWithServerCalled = false;
+//                    connection = "new";
+//                    internetReachbilityTimeout = null;
+//                    muteUmutePromiseResolver = null;
+//                    videoPauseResumePromiseResolver = null;
+//                    socketCheckTimeout = null;
+//                    isFetchAudioInProgress = false;
+//                    isFetchVideoInProgress = false;
+//                    webrtcSFUHandller = null;
+//                    instance = null;
+//                    if(destoryCallBack != null){
+//                        Handler mainHandler = new Handler(Looper.getMainLooper());
+//
+//                        Runnable myRunnable = new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                destoryCallBack.onEnded();
+//                            }
+//
+//
+//                        };
+//                        mainHandler.post(myRunnable);
+//                    }
+//                }
+//            }
+//        });
 
     }
     private BaseWebrtcSFU getHandler(){
