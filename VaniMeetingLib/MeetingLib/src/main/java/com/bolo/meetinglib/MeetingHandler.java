@@ -104,14 +104,14 @@ public class MeetingHandler implements HandlerDelegate {
     public boolean isPermissionApproved(){
         return  isPermissionGiven;
     }
-// To Optimize Stream if Speaker is not speaking
+    // To Optimize Stream if Speaker is not speaking
     public void optimizeStream(JSONObject data){
         if(meetingStartRequest == null){
             return;
         }
         getHandler().optimizeStream(data);
     }
-// Start Screenshare require Foreground Service
+    // Start Screenshare require Foreground Service
     public void startScreenShare(Intent foregroundServiceIntent, Activity activity){//Sachin
         if (foregroundServiceIntent != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -624,7 +624,7 @@ public class MeetingHandler implements HandlerDelegate {
 
                     }
                     try{
-                    localStream.removeTrack((VideoTrack) track.track);
+                        localStream.removeTrack((VideoTrack) track.track);
                     }
                     catch (Exception e){
 
@@ -1084,7 +1084,7 @@ public class MeetingHandler implements HandlerDelegate {
         if (newMediaStreamTrack.kind() .equalsIgnoreCase( "video") ){
             if (localStream.videoTracks.size() > 0) {
                 try{
-                localStream.removeTrack(localStream.videoTracks.get(0));
+                    localStream.removeTrack(localStream.videoTracks.get(0));
                 }
                 catch (Exception e){
 
@@ -1096,7 +1096,7 @@ public class MeetingHandler implements HandlerDelegate {
         if (newMediaStreamTrack.kind() .equalsIgnoreCase( "audio") ){
             if (localStream.audioTracks.size() > 0) {
                 try{
-                localStream.removeTrack(localStream.audioTracks.get(0));
+                    localStream.removeTrack(localStream.audioTracks.get(0));
                 }
                 catch (Exception e){
 
@@ -1235,45 +1235,45 @@ public class MeetingHandler implements HandlerDelegate {
             String url = wssUrl(meetingStartRequest.appId);
             logEvent(url , false);
 
-                try {
-                    wss = new WebSocketClient(new URI(url + connection)) {
-                        @Override
-                        public void onOpen(ServerHandshake handshakedata) {
-                            logEvent("connected ----" , false);
-                            isSetUpDone = false;
-                            socketCheckTimeout = null;
-                            onSocketConnected();
+            try {
+                wss = new WebSocketClient(new URI(url + connection)) {
+                    @Override
+                    public void onOpen(ServerHandshake handshakedata) {
+                        logEvent("connected ----" , false);
+                        isSetUpDone = false;
+                        socketCheckTimeout = null;
+                        onSocketConnected();
+                    }
+
+                    @Override
+                    public void onMessage(String message) {
+                        MeetingHandler.this.onMessage(message);
+                    }
+
+                    @Override
+                    public void onClose(int code, String reason, boolean remote) {
+                        logEvent("WebSocket is closed now.",false);
+                        logEvent(reason + " " + code,false);
+                        if(socketCheckTimeout == null){
+                            tryToReconectSocket();
+                            logEvent("socketCheckTimeout.",false);
                         }
 
-                        @Override
-                        public void onMessage(String message) {
-                            MeetingHandler.this.onMessage(message);
-                        }
+                    }
 
-                        @Override
-                        public void onClose(int code, String reason, boolean remote) {
-                            logEvent("WebSocket is closed now.",false);
-                            logEvent(reason + " " + code,false);
-                            if(socketCheckTimeout == null){
-                                tryToReconectSocket();
-                                logEvent("socketCheckTimeout.",false);
-                            }
+                    @Override
+                    public void onError(Exception ex) {
+                        logEvent("WebSocket error observed:",true);
+                        logEvent(ex.toString(),true);
+                        emitMessageToSource("onSocketError", ex);
 
-                        }
-
-                        @Override
-                        public void onError(Exception ex) {
-                            logEvent("WebSocket error observed:",true);
-                            logEvent(ex.toString(),true);
-                            emitMessageToSource("onSocketError", ex);
-
-                        }
-                    };
-                    wss.connect();
-                }
-                catch (Exception e){
-                    logEvent(e.toString(),true);
-                }
+                    }
+                };
+                wss.connect();
+            }
+            catch (Exception e){
+                logEvent(e.toString(),true);
+            }
         }
         else if(isForceFully == false && isWebScoketConnected()){
             emitMessageToSource("onConnected", new HashMap<>());
@@ -1738,7 +1738,7 @@ public class MeetingHandler implements HandlerDelegate {
 
                 boolean isParticipantStillPrensent = false;
                 HashMap<String,Object> result =
-                new ObjectMapper().readValue(data.getJSONObject("message").toString(), HashMap.class);
+                        new ObjectMapper().readValue(data.getJSONObject("message").toString(), HashMap.class);
                 for (Map.Entry<String, Object> peerDataBaseEntry : result.entrySet()) {
                     if ((participant.userId + " ") .equalsIgnoreCase (peerDataBaseEntry.getKey() + " ")) {
                         isParticipantStillPrensent = true;
@@ -2123,18 +2123,18 @@ public class MeetingHandler implements HandlerDelegate {
 
             String userId = data.getJSONObject("message").getString("user");
             Participant participant = Participant.participantByUserId(allParticipant, userId);
-        if (participant != null) {
-            participant.isAudioBlockedByAdmin = true;
-            participant.isAudioEnable = false;
+            if (participant != null) {
+                participant.isAudioBlockedByAdmin = true;
+                participant.isAudioEnable = false;
 
-        }
-        if (meetingStartRequest.userId .equalsIgnoreCase( userId)) {
-            String adminId = data.getJSONObject("message").getString("admin");
-            Participant admin = Participant.participantByUserId(allParticipant, adminId);
-            emitMessageToSource("audioBlocked", admin);
+            }
+            if (meetingStartRequest.userId .equalsIgnoreCase( userId)) {
+                String adminId = data.getJSONObject("message").getString("admin");
+                Participant admin = Participant.participantByUserId(allParticipant, adminId);
+                emitMessageToSource("audioBlocked", admin);
 
-        }
-        emitMessageToSource("audioVideoStatusUpdated", participant);
+            }
+            emitMessageToSource("audioVideoStatusUpdated", participant);
 
         }
         catch (Exception e){
@@ -2148,16 +2148,16 @@ public class MeetingHandler implements HandlerDelegate {
 
             String userId = data.getJSONObject("message").getString("user");
             Participant participant = Participant.participantByUserId(allParticipant, userId);
-        if (participant != null) {
-            participant.isAudioBlockedByAdmin = false;
+            if (participant != null) {
+                participant.isAudioBlockedByAdmin = false;
 
-        }
-        if (meetingStartRequest.userId .equalsIgnoreCase( userId) ){
-            String adminId = data.getJSONObject("message").getString("admin");
-            Participant admin = Participant.participantByUserId(allParticipant, adminId);
-            emitMessageToSource("audioUnblocked", admin);
+            }
+            if (meetingStartRequest.userId .equalsIgnoreCase( userId) ){
+                String adminId = data.getJSONObject("message").getString("admin");
+                Participant admin = Participant.participantByUserId(allParticipant, adminId);
+                emitMessageToSource("audioUnblocked", admin);
 
-        }
+            }
 
         }
         catch (Exception e){
@@ -2172,15 +2172,15 @@ public class MeetingHandler implements HandlerDelegate {
 
             String userId = data.getJSONObject("message").getString("user");
             Participant participant = Participant.participantByUserId(allParticipant, userId);
-        if (participant != null) {
-            participant.isMessageBlockedByAdmin = true;
-        }
-        if (meetingStartRequest.userId .equalsIgnoreCase( userId) ){
-            String adminId = data.getJSONObject("message").getString("admin");
-            Participant admin = Participant.participantByUserId(allParticipant, adminId);
-            emitMessageToSource("messageBlocked", admin);
+            if (participant != null) {
+                participant.isMessageBlockedByAdmin = true;
+            }
+            if (meetingStartRequest.userId .equalsIgnoreCase( userId) ){
+                String adminId = data.getJSONObject("message").getString("admin");
+                Participant admin = Participant.participantByUserId(allParticipant, adminId);
+                emitMessageToSource("messageBlocked", admin);
 
-        }
+            }
 
         }
         catch (Exception e){
@@ -2191,18 +2191,18 @@ public class MeetingHandler implements HandlerDelegate {
 
     private void      onMessageUnblockCalled(JSONObject data) {
         try{
-        String userId = data.getJSONObject("message").getString("user");
+            String userId = data.getJSONObject("message").getString("user");
             Participant participant = Participant.participantByUserId(allParticipant, userId);
-        if (participant != null) {
-            participant.isMessageBlockedByAdmin = false;
+            if (participant != null) {
+                participant.isMessageBlockedByAdmin = false;
 
-        }
-        if (meetingStartRequest.userId .equalsIgnoreCase( userId)) {
-            String adminId = data.getJSONObject("message").getString("admin");
-            Participant admin = Participant.participantByUserId(allParticipant, adminId);
-            emitMessageToSource("messageUnblocked", admin);
+            }
+            if (meetingStartRequest.userId .equalsIgnoreCase( userId)) {
+                String adminId = data.getJSONObject("message").getString("admin");
+                Participant admin = Participant.participantByUserId(allParticipant, adminId);
+                emitMessageToSource("messageUnblocked", admin);
 
-        }
+            }
         }
         catch (Exception e){
             logEvent(e.toString(),true);
@@ -2215,15 +2215,15 @@ public class MeetingHandler implements HandlerDelegate {
 
             String userId = data.getJSONObject("message").getString("user");
             Participant participant = Participant.participantByUserId(allParticipant, userId);
-        if (participant != null) {
-            participant.isWhiteboardBlockedByAdmin = true;
-        }
-        if (meetingStartRequest.userId .equalsIgnoreCase( userId) ){
-            String adminId = data.getJSONObject("message").getString("admin");
-            Participant admin = Participant.participantByUserId(allParticipant, adminId);
-            emitMessageToSource("whiteboardBlocked", admin);
+            if (participant != null) {
+                participant.isWhiteboardBlockedByAdmin = true;
+            }
+            if (meetingStartRequest.userId .equalsIgnoreCase( userId) ){
+                String adminId = data.getJSONObject("message").getString("admin");
+                Participant admin = Participant.participantByUserId(allParticipant, adminId);
+                emitMessageToSource("whiteboardBlocked", admin);
 
-        }
+            }
         }
         catch (Exception e){
             logEvent(e.toString(),true);
@@ -2236,13 +2236,13 @@ public class MeetingHandler implements HandlerDelegate {
 
             String userId = data.getJSONObject("message").getString("user");
             Participant participant = Participant.participantByUserId(allParticipant, userId);
-        if( participant != null){
+            if( participant != null){
 
-            this.logEvent("onStartMeetingCalled",false);
-            participant.isStartMeetingCalled = true;
-            handleOnParticipantJoined(participant);
+                this.logEvent("onStartMeetingCalled",false);
+                participant.isStartMeetingCalled = true;
+                handleOnParticipantJoined(participant);
 
-        }
+            }
         }
         catch (Exception e){
             logEvent(e.toString(),true);
@@ -2255,21 +2255,21 @@ public class MeetingHandler implements HandlerDelegate {
 
             String userId = data.getJSONObject("message").getString("user");
             Participant participant = Participant.participantByUserId(allParticipant, userId);
-        if (participant != null) {
-            participant.isWhiteboardBlockedByAdmin = false;
+            if (participant != null) {
+                participant.isWhiteboardBlockedByAdmin = false;
 
-        }
-        if (meetingStartRequest.userId .equalsIgnoreCase( userId)) {
-            String adminId = data.getJSONObject("message").getString("admin");
-            Participant admin = Participant.participantByUserId(allParticipant, adminId);
-            emitMessageToSource("whiteboardUnblocked", admin);
+            }
+            if (meetingStartRequest.userId .equalsIgnoreCase( userId)) {
+                String adminId = data.getJSONObject("message").getString("admin");
+                Participant admin = Participant.participantByUserId(allParticipant, adminId);
+                emitMessageToSource("whiteboardUnblocked", admin);
 
+            }
         }
-    }
         catch (Exception e){
             logEvent(e.toString(),true);
 
-    }
+        }
     }
 
     private boolean isWebScoketConnected() {
@@ -2408,27 +2408,27 @@ public class MeetingHandler implements HandlerDelegate {
                     }
 
 
-                    if(screenshareStream != null) {
-                        logEvent("screenshareStream",false);
-                        try {
-                            screenshareStream.dispose();
-                        }
-                        catch (Exception e){
-
-                        }
-                    }
+//                    if(screenshareStream != null) {
+//                        logEvent("screenshareStream",false);
+//                        try {
+//                            screenshareStream.dispose();
+//                        }
+//                        catch (Exception e){
+//
+//                        }
+////                    }
                     screenshareStream = null;
 
-
-                    if(localStream != null) {
-                        logEvent("localStream",false);
-                        try {
-                            localStream.dispose();
-                        }
-                        catch (Exception e){
-
-                        }
-                    }
+//
+//                    if(localStream != null) {
+//                        logEvent("localStream",false);
+//                        try {
+//                            localStream.dispose();
+//                        }
+//                        catch (Exception e){
+//
+//                        }
+//                    }
                     localStream = null;
                     mMediaProjectionPermissionResultData = null;
 
@@ -2598,12 +2598,12 @@ public class MeetingHandler implements HandlerDelegate {
     private BaseWebrtcSFU getHandler(){
         if(webrtcSFUHandller == null){
             if(meetingStartRequest != null){
-                    if(meetingStartRequest.shouldUseSFU()){
-                        webrtcSFUHandller = new SFUHandler(context);
-                    }
-                    else{
-                        webrtcSFUHandller = new WebrtcHandler(context);
-                    }
+                if(meetingStartRequest.shouldUseSFU()){
+                    webrtcSFUHandller = new SFUHandler(context);
+                }
+                else{
+                    webrtcSFUHandller = new WebrtcHandler(context);
+                }
                 webrtcSFUHandller.setHandlerDelegate(MeetingHandler.this);
             }
         }
@@ -2679,7 +2679,7 @@ public class MeetingHandler implements HandlerDelegate {
 
 
 
-  public   interface OutputCallBack{
+    public   interface OutputCallBack{
         void onCompletion(Output output);
     }
     public   interface DestoryCallBack{
