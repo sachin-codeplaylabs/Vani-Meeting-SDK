@@ -62,9 +62,15 @@ public class Config {
             iceServers.add(new PeerConnection.IceServer("stun:stun.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
             iceServers.add(new PeerConnection.IceServer("turn:turn.onrx.ca:3478","uhc","12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
+
+        else if(appId .equalsIgnoreCase( "doubtconnect")){
+            iceServers.add(new PeerConnection.IceServer("stun:stun.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turn.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+        }
+
         else{
-            iceServers.add(new PeerConnection.IceServer("stun:stundoubtconnect.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
-            iceServers.add(new PeerConnection.IceServer("turn:turndoubtconnect.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("stun:stun.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
+            iceServers.add(new PeerConnection.IceServer("turn:turn.vaniassistant.com:3478","sachin","Hhands@12345",PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK));
         }
 
         return iceServers;
@@ -86,16 +92,16 @@ public class Config {
             return "wss://testing.vaniassistant.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "ind1")){
-            return "wss://ind1.vanimeetings.com/?connection=";
+            return "ws://ind1.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "ind2")){
-            return "wss://ind2.vanimeetings.com/?connection=";
+            return "ws://ind2.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "ind3")){
-            return "wss://ind3.vanimeetings.com/?connection=";
+            return "ws://ind3.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "ind4")){
-            return "wss://ind4.vanimeetings.com/?connection=";
+            return "ws://ind4.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "fra1")){
             return "wss://fra1.vanimeetings.com/?connection=";
@@ -106,7 +112,10 @@ public class Config {
         else if(appId .equalsIgnoreCase( "trail")){
             return "wss://trialserver.vanimeetings.com/?connection=";
         }
-        return "wss://testing.vaniassistant.com/?connection=";
+        else if(appId .equalsIgnoreCase( "doubtconnect")){
+            return "wss://ind4.vanimeetings.com/?connection=";
+        }
+        return "wss://ind4.vanimeetings.com/?connection=";
     }
 
     private long minBitrateConfig(String appId){
