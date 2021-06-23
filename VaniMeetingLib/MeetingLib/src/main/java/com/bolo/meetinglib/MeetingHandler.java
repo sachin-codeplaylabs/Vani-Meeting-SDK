@@ -1082,27 +1082,42 @@ public class MeetingHandler implements HandlerDelegate {
             localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
         }
         if (newMediaStreamTrack.kind() .equalsIgnoreCase( "video") ){
+            boolean canAdd = true;
             if (localStream.videoTracks.size() > 0) {
-                try{
-                    localStream.removeTrack(localStream.videoTracks.get(0));
+                if(localStream.videoTracks.get(0) == newMediaStreamTrack){
+                    canAdd = false;
                 }
-                catch (Exception e){
+                else {
+                    try {
+                        localStream.removeTrack(localStream.videoTracks.get(0));
+                    } catch (Exception e) {
 
+                    }
                 }
             }
-            localStream.addTrack((VideoTrack) newMediaStreamTrack);
+            if(canAdd) {
+                localStream.addTrack((VideoTrack) newMediaStreamTrack);
+            }
 
         }
         if (newMediaStreamTrack.kind() .equalsIgnoreCase( "audio") ){
-            if (localStream.audioTracks.size() > 0) {
-                try{
-                    localStream.removeTrack(localStream.audioTracks.get(0));
-                }
-                catch (Exception e){
+            boolean canAdd = true;
 
+            if (localStream.audioTracks.size() > 0) {
+                if(localStream.audioTracks.get(0) == newMediaStreamTrack){
+                    canAdd = false;
+                }
+                else {
+                    try {
+                        localStream.removeTrack(localStream.audioTracks.get(0));
+                    } catch (Exception e) {
+
+                    }
                 }
             }
-            localStream.addTrack((AudioTrack) newMediaStreamTrack);
+            if(canAdd) {
+                localStream.addTrack((AudioTrack) newMediaStreamTrack);
+            }
         }
     }
 

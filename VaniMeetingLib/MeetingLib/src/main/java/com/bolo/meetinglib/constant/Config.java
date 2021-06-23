@@ -104,10 +104,10 @@ public class Config {
             return "ws://ind4.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "fra1")){
-            return "wss://fra1.vanimeetings.com/?connection=";
+            return "ws://fra1.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "nyc1")){
-            return "wss://nyc1.vanimeetings.com/?connection=";
+            return "ws://nyc1.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "trail")){
             return "wss://trialserver.vanimeetings.com/?connection=";
