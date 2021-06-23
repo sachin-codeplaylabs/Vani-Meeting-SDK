@@ -1096,7 +1096,9 @@ public class MeetingHandler implements HandlerDelegate {
                 }
             }
             if(canAdd) {
-                localStream.addTrack((VideoTrack) newMediaStreamTrack);
+                if(localStream.addTrack((VideoTrack) newMediaStreamTrack) == false){
+                    localStream.addTrack((VideoTrack) getHandler().getLocalMediaTrack("video"));
+                }
             }
 
         }
@@ -1116,7 +1118,9 @@ public class MeetingHandler implements HandlerDelegate {
                 }
             }
             if(canAdd) {
-                localStream.addTrack((AudioTrack) newMediaStreamTrack);
+                if(localStream.addTrack((AudioTrack) newMediaStreamTrack) == false){
+                    localStream.addTrack((AudioTrack) getHandler().getLocalMediaTrack("audio"));
+                }
             }
         }
     }
