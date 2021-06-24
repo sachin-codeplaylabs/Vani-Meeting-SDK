@@ -90,7 +90,7 @@ public class MeetingHandler implements HandlerDelegate {
     private boolean isReachable = true;
     private Map<String,List<EventEmitterHandler>> events = new HashMap<>();
     int CAPTURE_PERMISSION_REQUEST_CODE = 1922;
-
+    int maxReconnectionTry = 10;
     static MeetingHandler  instance;
     private Intent mMediaProjectionPermissionResultData;
 
@@ -328,7 +328,8 @@ public class MeetingHandler implements HandlerDelegate {
 
                     }
                     try {
-                        localStream.removeTrack((AudioTrack) track.track);
+                        localStream.audioTracks.remove(track.track);
+//                        localStream.removeTrack((AudioTrack) track.track);
                     }
                     catch (Exception e){
 
@@ -624,7 +625,8 @@ public class MeetingHandler implements HandlerDelegate {
 
                     }
                     try{
-                        localStream.removeTrack((VideoTrack) track.track);
+                        localStream.videoTracks.remove(track.track);
+//                        localStream.removeTrack((VideoTrack) track.trackrack);
                     }
                     catch (Exception e){
 
@@ -1088,8 +1090,10 @@ public class MeetingHandler implements HandlerDelegate {
                     canAdd = false;
                 }
                 else {
-                    try {
-                        localStream.removeTrack(localStream.videoTracks.get(0));
+                    try
+                    {
+                        localStream.videoTracks.clear();
+//                        localStream.removeTrack(localStream.videoTracks.get(0));
                     } catch (Exception e) {
 
                     }
@@ -1111,7 +1115,8 @@ public class MeetingHandler implements HandlerDelegate {
                 }
                 else {
                     try {
-                        localStream.removeTrack(localStream.audioTracks.get(0));
+                        localStream.audioTracks.clear();
+//                        localStream.removeTrack(localStream.audioTracks.get(0));
                     } catch (Exception e) {
 
                     }
@@ -1121,6 +1126,7 @@ public class MeetingHandler implements HandlerDelegate {
                 if(localStream.addTrack((AudioTrack) newMediaStreamTrack) == false){
                     localStream.addTrack((AudioTrack) getHandler().getLocalMediaTrack("audio"));
                 }
+
             }
         }
     }
@@ -1161,7 +1167,31 @@ public class MeetingHandler implements HandlerDelegate {
         }
         if (localStream == null) {
             localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
+        }
+        else{
+            if(!isForAudio || !isForVideo){
+                AudioTrack audioTrack = null;
+                VideoTrack videoTrack = null;
+                if(!isForAudio && localStream.audioTracks.size() > 0){
+                    audioTrack = localStream.audioTracks.get(0);
+                }
+                if(!isForVideo && localStream.videoTracks.size() > 0){
+                    videoTrack = localStream.videoTracks.get(0);
+                }
+                localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
 
+                if(audioTrack != null){
+                    localStream.addTrack(audioTrack);
+                }
+
+                if(videoTrack != null){
+                    localStream.addTrack(videoTrack);
+                }
+
+            }
+            else{
+                localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
+            }
         }
 
         if (isForAudio && stream.audioTracks.size() > 0) {
@@ -1262,6 +1292,7 @@ public class MeetingHandler implements HandlerDelegate {
                         isSetUpDone = false;
                         socketCheckTimeout = null;
                         onSocketConnected();
+                        maxReconnectionTry = 10;
                     }
 
                     @Override
@@ -1289,6 +1320,7 @@ public class MeetingHandler implements HandlerDelegate {
                     }
                 };
                 wss.connect();
+                maxReconnectionTry = maxReconnectionTry - 1;
             }
             catch (Exception e){
                 logEvent(e.toString(),true);
@@ -1303,7 +1335,7 @@ public class MeetingHandler implements HandlerDelegate {
 
 
     private void tryToReconectSocket(){
-        if(isWebScoketConnected() == false && isEnded == false){
+        if(isWebScoketConnected() == false && isEnded == false && maxReconnectionTry > 0) {
             wss = null;
             connection = "reconnect";
             connect(true);
