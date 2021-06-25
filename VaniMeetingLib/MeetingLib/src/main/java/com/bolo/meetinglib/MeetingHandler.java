@@ -93,6 +93,7 @@ public class MeetingHandler implements HandlerDelegate {
     int maxReconnectionTry = 10;
     static MeetingHandler  instance;
     private Intent mMediaProjectionPermissionResultData;
+    public  int debugMode = 0;
 
     public  static  MeetingHandler getInstance(){
         if(instance == null){
@@ -2662,7 +2663,14 @@ public class MeetingHandler implements HandlerDelegate {
     }
 
     public void logEvent(String msg, boolean isError){
-        if (isError) {
+        if(debugMode == 0){
+            return;
+        }
+        if (debugMode == 1 && isError ){
+            Log.e("VaniMeeting", msg);
+            return;
+        }
+        if (isError ) {
             Log.e("VaniMeeting", msg);
         }
         else{
