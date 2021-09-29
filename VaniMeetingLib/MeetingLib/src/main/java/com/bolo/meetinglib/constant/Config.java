@@ -77,19 +77,19 @@ public class Config {
     }
     public static String wssUrl(String  appId){
         if(appId .equalsIgnoreCase( "testing")){
-            return "wss://testing.vaniassistant.com/?connection=";
+            return "ws://testing.vaniassistant.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "demo")){
-            return "wss://demoserver.vanimeetings.com/?connection=";
+            return "ws://demoserver.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "yqgpros")){
-            return "wss://meetingserver.yqgtech.com/?connection=";
+            return "ws://meetingserver.yqgtech.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "uhc")){
-            return "wss://meetingserver.yqgtech.com/?connection=";
+            return "ws://meetingserver.yqgtech.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "xpertflix")){
-            return "wss://testing.vaniassistant.com/?connection=";
+            return "ws://testing.vaniassistant.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "ind1")){
             return "ws://ind1.vanimeetings.com/?connection=";
@@ -110,12 +110,12 @@ public class Config {
             return "ws://nyc1.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "trail")){
-            return "wss://trialserver.vanimeetings.com/?connection=";
+            return "ws://trialserver.vanimeetings.com/?connection=";
         }
         else if(appId .equalsIgnoreCase( "doubtconnect")){
-            return "wss://ind4.vanimeetings.com/?connection=";
+            return "ws://ind4.vanimeetings.com/?connection=";
         }
-        return "wss://ind4.vanimeetings.com/?connection=";
+        return "ws://ind4.vanimeetings.com/?connection=";
     }
 
     private long minBitrateConfig(String appId){
