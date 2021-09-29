@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Vani-Meeting-SDK-Sample.VaniMeetingLib.iml" filepath="$PROJECT_DIR$/.idea/modules/Vani-Meeting-SDK-Sample.VaniMeetingLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/VaniMeetingLib.iml" filepath="$PROJECT_DIR$/.idea/VaniMeetingLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MeetingLib/VaniMeetingLib.MeetingLib.iml" filepath="$PROJECT_DIR$/.idea/modules/MeetingLib/VaniMeetingLib.MeetingLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/VaniMeetingLib.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/VaniMeetingLib.app.iml" />
+    </modules>
+  </component>
+</project>

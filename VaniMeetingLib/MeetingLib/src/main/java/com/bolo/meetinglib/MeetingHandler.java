@@ -1350,8 +1350,7 @@ public class MeetingHandler implements HandlerDelegate {
         }
         else{
             socketCheckTimeout = null;
-            emitMessageToSource("onReconnectTimeOut", new HashMap<>());
-
+            this.emitMessageToSource("onReconnectTimeOut", new HashMap());
         }
     }
 
@@ -1509,8 +1508,6 @@ public class MeetingHandler implements HandlerDelegate {
             if (isWebScoketConnected() == false) {
                 return;
             }
-
-
             JSONObject config = new JSONObject();
             config.put("participant" , getSelfParticipant().toJsonObject());
             config.put("appId" , meetingStartRequest.appId);
