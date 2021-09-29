@@ -90,9 +90,10 @@ public class MeetingHandler implements HandlerDelegate {
     private boolean isReachable = true;
     private Map<String,List<EventEmitterHandler>> events = new HashMap<>();
     int CAPTURE_PERMISSION_REQUEST_CODE = 1922;
-
+    int maxReconnectionTry = 10;
     static MeetingHandler  instance;
     private Intent mMediaProjectionPermissionResultData;
+    public  int debugMode = 0;
 
     public  static  MeetingHandler getInstance(){
         if(instance == null){
@@ -328,7 +329,8 @@ public class MeetingHandler implements HandlerDelegate {
 
                     }
                     try {
-                        localStream.removeTrack((AudioTrack) track.track);
+                        localStream.audioTracks.remove(track.track);
+//                        localStream.removeTrack((AudioTrack) track.track);
                     }
                     catch (Exception e){
 
@@ -624,7 +626,8 @@ public class MeetingHandler implements HandlerDelegate {
 
                     }
                     try{
-                        localStream.removeTrack((VideoTrack) track.track);
+                        localStream.videoTracks.remove(track.track);
+//                        localStream.removeTrack((VideoTrack) track.trackrack);
                     }
                     catch (Exception e){
 
@@ -1082,27 +1085,50 @@ public class MeetingHandler implements HandlerDelegate {
             localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
         }
         if (newMediaStreamTrack.kind() .equalsIgnoreCase( "video") ){
+            boolean canAdd = true;
             if (localStream.videoTracks.size() > 0) {
-                try{
-                    localStream.removeTrack(localStream.videoTracks.get(0));
+                if(localStream.videoTracks.get(0) == newMediaStreamTrack){
+                    canAdd = false;
                 }
-                catch (Exception e){
+                else {
+                    try
+                    {
+                        localStream.videoTracks.clear();
+//                        localStream.removeTrack(localStream.videoTracks.get(0));
+                    } catch (Exception e) {
 
+                    }
                 }
             }
-            localStream.addTrack((VideoTrack) newMediaStreamTrack);
+            if(canAdd) {
+                if(localStream.addTrack((VideoTrack) newMediaStreamTrack) == false){
+                    localStream.addTrack((VideoTrack) getHandler().getLocalMediaTrack("video"));
+                }
+            }
 
         }
         if (newMediaStreamTrack.kind() .equalsIgnoreCase( "audio") ){
-            if (localStream.audioTracks.size() > 0) {
-                try{
-                    localStream.removeTrack(localStream.audioTracks.get(0));
-                }
-                catch (Exception e){
+            boolean canAdd = true;
 
+            if (localStream.audioTracks.size() > 0) {
+                if(localStream.audioTracks.get(0) == newMediaStreamTrack){
+                    canAdd = false;
+                }
+                else {
+                    try {
+                        localStream.audioTracks.clear();
+//                        localStream.removeTrack(localStream.audioTracks.get(0));
+                    } catch (Exception e) {
+
+                    }
                 }
             }
-            localStream.addTrack((AudioTrack) newMediaStreamTrack);
+            if(canAdd) {
+                if(localStream.addTrack((AudioTrack) newMediaStreamTrack) == false){
+                    localStream.addTrack((AudioTrack) getHandler().getLocalMediaTrack("audio"));
+                }
+
+            }
         }
     }
 
@@ -1142,7 +1168,31 @@ public class MeetingHandler implements HandlerDelegate {
         }
         if (localStream == null) {
             localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
+        }
+        else{
+            if(!isForAudio || !isForVideo){
+                AudioTrack audioTrack = null;
+                VideoTrack videoTrack = null;
+                if(!isForAudio && localStream.audioTracks.size() > 0){
+                    audioTrack = localStream.audioTracks.get(0);
+                }
+                if(!isForVideo && localStream.videoTracks.size() > 0){
+                    videoTrack = localStream.videoTracks.get(0);
+                }
+                localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
 
+                if(audioTrack != null){
+                    localStream.addTrack(audioTrack);
+                }
+
+                if(videoTrack != null){
+                    localStream.addTrack(videoTrack);
+                }
+
+            }
+            else{
+                localStream = getHandler().getPeerFactory().createLocalMediaStream("localStream");
+            }
         }
 
         if (isForAudio && stream.audioTracks.size() > 0) {
@@ -1243,6 +1293,7 @@ public class MeetingHandler implements HandlerDelegate {
                         isSetUpDone = false;
                         socketCheckTimeout = null;
                         onSocketConnected();
+                        maxReconnectionTry = 10;
                     }
 
                     @Override
@@ -1270,6 +1321,7 @@ public class MeetingHandler implements HandlerDelegate {
                     }
                 };
                 wss.connect();
+                maxReconnectionTry = maxReconnectionTry - 1;
             }
             catch (Exception e){
                 logEvent(e.toString(),true);
@@ -1284,7 +1336,7 @@ public class MeetingHandler implements HandlerDelegate {
 
 
     private void tryToReconectSocket(){
-        if(isWebScoketConnected() == false && isEnded == false){
+        if(isWebScoketConnected() == false && isEnded == false && maxReconnectionTry > 0) {
             wss = null;
             connection = "reconnect";
             connect(true);
@@ -2615,7 +2667,14 @@ public class MeetingHandler implements HandlerDelegate {
     }
 
     public void logEvent(String msg, boolean isError){
-        if (isError) {
+        if(debugMode == 0){
+            return;
+        }
+        if (debugMode == 1 && isError ){
+            Log.e("VaniMeeting", msg);
+            return;
+        }
+        if (isError ) {
             Log.e("VaniMeeting", msg);
         }
         else{

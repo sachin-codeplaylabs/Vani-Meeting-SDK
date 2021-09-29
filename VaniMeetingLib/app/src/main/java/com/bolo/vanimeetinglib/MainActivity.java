@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onEvent(String type,Object listner) {
                 Log.e("onConnected","onConnected");
+                MeetingHandler.getInstance().startLocalStream(false,true);
 
                 MeetingHandler.getInstance().startMeeting();
 
